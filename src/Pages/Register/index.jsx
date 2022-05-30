@@ -1,0 +1,102 @@
+import { useForm } from 'react-hook-form';
+import { useNavigate, Navigate } from 'react-router';
+
+/* My Libs */
+import { Inputs, Locales } from './config';
+import * as StyleSheet from './styles';
+import Input from 'Components/Input';
+import Button from 'Components/Button';
+import Layout from 'Components/SimpleLayout';
+
+/* My Redux libs */
+import useUser from 'Hooks/useUser';
+
+
+const Register = () => {
+    const navigate = useNavigate()
+
+    const {user, loading} = useUser()
+
+    document.title = `Vasa Knjiga - Registracija`
+    
+    const {getValues, register, handleSubmit, setError, formState: { errors } } = useForm()
+    
+    const firstname = register('firstname', Inputs.firstname.options);
+    
+    const lastname = register('lastname', Inputs.lastname.options);
+    
+    const email = register('email', Inputs.email.options);
+    
+    const password = register('password', Inputs.password.options);
+    
+    const confirmPassword = register('confirmPassword', Inputs.confirmPassword.options);
+    
+    const onSubmit = data => {
+        const { firstname, lastname, email, confirmPassword, password } = getValues();
+
+        if (password !== confirmPassword) {
+            return setError('confirmPassword', Inputs.confirmPassword.errors.notMatch)
+        }
+    }
+
+    const onError = data => {   
+        for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+                const type = data[key].type
+                setError(key, Inputs[key]['errors'][type])
+            }
+        }
+    }
+
+    const goLogin = () => {
+        navigate('/auth/login')
+    }
+
+    if (loading) return <h1>...</h1>
+    
+    if (user) return <Navigate to="/" replace/>
+    
+    return (
+        <Layout logo title={Locales.title}>
+            <form className={StyleSheet.Form} onSubmit={handleSubmit(onSubmit, onError)}>
+                <Input 
+                    register={firstname}
+                    placeholder={Inputs.firstname.placeholder}
+                    error={errors.firstname && errors.firstname.message}
+                />
+                <Input 
+                    register={lastname}
+                    placeholder={Inputs.lastname.placeholder}
+                    error={errors.lastname && errors.lastname.message}
+                />
+                <Input 
+                    register={email}
+                    placeholder={Inputs.email.placeholder}
+                    error={errors.email && errors.email.message}
+                />
+                <Input 
+                    register={password}
+                    type="password"
+                    placeholder={Inputs.password.placeholder}
+                    error={errors.password && errors.password.message}
+                />
+                <Input 
+                    register={confirmPassword}
+                    type="password"
+                    placeholder={Inputs.confirmPassword.placeholder}
+                    error={errors.confirmPassword && errors.confirmPassword.message}
+                />
+                <Button style="primary" size="sm" type="submit">Napravite Nalog</Button>
+            </form>
+
+            <p className={StyleSheet.LoginParagraph}>
+                {Locales.login}
+                <span className={StyleSheet.LoginSpan}>
+                    <Button onClick={goLogin} style="text" size="none">{Locales.loginBtn}</Button>
+                </span>
+            </p>
+        </Layout>
+    );
+}
+
+export default Register
