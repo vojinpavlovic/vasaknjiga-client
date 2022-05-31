@@ -130,6 +130,26 @@ export const Inputs = {
     }
 }
 
+export const RegisterErrors = {
+    "user-exist": {
+        type: "custom",
+        message: "Korisnik postoji sa tim podacima!"
+    },
+    "internal-error": {
+        type: "custom",
+        message: "Oops. Zao nam je, desila se greska na serveru."
+    },
+    "not-found": {
+        type: "custom",
+        message: `
+            Desila se greska koju ne poznajemo. 
+            Bili bi Vam jako zahvalni ako otvorite inspect element (F12 dugme)
+            Odete u konzolu, slikate i posaljete nam na mail greske@vasaknjiga.com.
+            Hvala unapred <3
+        `
+    }
+}
+
 export const Locales = {
     title: "Napravite Nalog",
     login: 'Imate korisnicki nalog?',

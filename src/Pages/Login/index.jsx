@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form'
-import { useNavigate, Navigate } from 'react-router'
+import { useNavigate } from 'react-router'
 import { useDispatch } from 'react-redux'
 
 /* My Libs */
@@ -11,19 +12,17 @@ import Layout from 'Components/SimpleLayout'
 
 /* API */
 import TryLogin from 'API/login'
-
-/* Redux */
-import useUser from 'Hooks/useUser';
+//import useUser from 'Hooks/useUser';
 import { set } from 'Features/user/userSlice'
 
 const Login = () => {
+    document.title = `Vasa Knjiga - Prijava`
+    
     const navigate = useNavigate()
-
-    const {user, loading} = useUser()
+    
+    const [disabledBtn, setDisabledBtn] = useState(false)
 
     const dispatch = useDispatch()
-
-    document.title = `Vasa Knjiga - Prijava`
 
     const { register, handleSubmit, setError, formState: { errors } } = useForm()
     
@@ -33,20 +32,23 @@ const Login = () => {
     
     const onSubmit = async data => {
         const {email, password} = data
+        setDisabledBtn(true)
+        
         const user = await TryLogin(email, password)
 
         if (user.success) {
-            return dispatch(set(user.result))
+            dispatch(set(user.result))
+            return navigate('/')
         }
-
         if (!user.success) {
+            setDisabledBtn(false)
             if (LoginErrors[user.msg]) {
                 return setError("password", LoginErrors[user.msg])
             }
             
             /* In case there is no registered error, we will notify user to report it*/
             console.log(user)
-            return setError("password", LoginErrors["not found"])
+            return setError("password", LoginErrors["not-found"])
         } 
     }
 
@@ -67,10 +69,6 @@ const Login = () => {
         navigate('/auth/password/reset')
     }
 
-    if (loading) return <h1>...</h1>
-    
-    if (user) return <Navigate to="/" replace/>
-
     return (
         <Layout logo title={Locales.title} subtitle={Locales.subtitle}>
             <form className={StyleSheet.Form} onSubmit={handleSubmit(onSubmit, onError)}>
@@ -90,7 +88,9 @@ const Login = () => {
                         goPasswordReset()
                     }}
                 />
-                <Button style="primary" size="sm" type="submit">Prijavi se</Button>
+                <Button disabled={disabledBtn} style={!disabledBtn ? "primary" : "disabled"} size="sm" type="submit">
+                    {!disabledBtn ? "Prijavi se" : "Proveravamo podatke..."}
+                </Button>            
             </form>
 
             <p className={StyleSheet.RegisterParagraph}>

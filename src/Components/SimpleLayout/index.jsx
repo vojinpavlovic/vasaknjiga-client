@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import * as StyleSheet from "./styles"
 import Logo from 'Static/images/logo.png'
 

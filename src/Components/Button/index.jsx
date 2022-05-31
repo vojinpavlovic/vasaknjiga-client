@@ -13,13 +13,13 @@ const Sizes = {
     'sm' : StyleSheet.Small
 }
 
-const Button = ({style, size, onClick, children}) => {
+const Button = ({style, size, onClick, children, disabled}) => {
     const setStyle = () => Styles[style] ? Styles[style] : Styles['primary']
 
     const setSize = () => Sizes[size] ? Sizes[size] : Sizes['sm']
 
     return (
-        <button onClick={onClick} className={`${setStyle()} ${setSize()}`}>{children}</button>
+        <button onClick={onClick} className={`${setStyle()} ${setSize()}`} disabled={disabled}>{children}</button>
     )
 }
 
