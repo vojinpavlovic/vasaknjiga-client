@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, Navigate } from 'react-router';
-import { DotPulse as Loading } from '@uiball/loaders'
+import { useDispatch } from 'react-redux';
 
 /* My Libs */
 import { Inputs, Locales, RegisterErrors } from './config';
@@ -11,9 +11,8 @@ import Button from 'Components/Button';
 import Layout from 'Components/SimpleLayout';
 
 //API
-//import useUser from 'Hooks/useUser';
 import TryRegister  from 'API/register'
-
+import { getUser } from 'Features/user/userSlice';
 
 
 const Register = () => {
@@ -21,7 +20,7 @@ const Register = () => {
     
     const navigate = useNavigate()
     
-    //const {user, loading} = useUser()
+    const dispatch = useDispatch()
     
     const [disabledBtn, setDisabledBtn] = useState(false)
 
@@ -46,20 +45,20 @@ const Register = () => {
 
         setDisabledBtn(true)
 
-        const registration = await TryRegister(firstname, lastname, email, password, confirmPassword)
+        const result = await TryRegister(firstname, lastname, email, password, confirmPassword)
         
-        if (registration.success) {
-            return navigate('/auth/login')
+        if (result.success) {
+            return dispatch(getUser())
         }
         
-        if (!registration.success) {
+        if (!result.success) {
             setDisabledBtn(false)
-            if (RegisterErrors[registration.msg]) {
-                return setError("confirmPassword", RegisterErrors[registration.msg])
+            if (RegisterErrors[result.msg]) {
+                return setError("confirmPassword", RegisterErrors[result.msg])
             }
 
             /* In case there is no registered error, we will notify user to report it*/
-            console.log(registration)
+            console.log(result)
             return setError("confirmPassword", RegisterErrors["not-found"])
         } 
     }
@@ -76,10 +75,6 @@ const Register = () => {
     const goLogin = () => {
         navigate('/auth/login')
     }
-
-    //if (loading) return <Layout ><Loading size={50} color="#413ef7" /></Layout>
-    
-    //if (user) return <Navigate to="/" replace/>
     
     return (
         <Layout logo title={Locales.title}>

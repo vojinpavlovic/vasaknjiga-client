@@ -18,18 +18,14 @@ export const userSlice = createSlice({
         user: null,
         loading: true
     },
-    reducers: {
-        set: (state, action) => {
-            state.user = action.payload
-        },
-    },
     extraReducers: {
         [getUser.pending]: (state) => {
             state.loading = true;
         },
         [getUser.fulfilled]: (state, action) => {
             state.loading = false;
-            state.user = action.payload.result
+            // In case result is undefined we want it to be null
+            state.user = action.payload.result || null
         },
         [getUser.rejected]: (state) => {
             state.user = null

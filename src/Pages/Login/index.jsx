@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
-import { useDispatch } from 'react-redux'
-
+import { useDispatch } from 'react-redux';
 /* My Libs */
 import * as StyleSheet from './styles'
 import { Inputs, Locales, LoginErrors } from './config'
@@ -12,17 +11,16 @@ import Layout from 'Components/SimpleLayout'
 
 /* API */
 import TryLogin from 'API/login'
-//import useUser from 'Hooks/useUser';
-import { set } from 'Features/user/userSlice'
+import { getUser } from 'Features/user/userSlice';
 
 const Login = () => {
-    document.title = `Vasa Knjiga - Prijava`
-    
+    document.title = `Vasa Knjiga - Prijava` 
+
     const navigate = useNavigate()
     
-    const [disabledBtn, setDisabledBtn] = useState(false)
-
     const dispatch = useDispatch()
+
+    const [disabledBtn, setDisabledBtn] = useState(false)
 
     const { register, handleSubmit, setError, formState: { errors } } = useForm()
     
@@ -34,20 +32,20 @@ const Login = () => {
         const {email, password} = data
         setDisabledBtn(true)
         
-        const user = await TryLogin(email, password)
+        const result = await TryLogin(email, password)
 
-        if (user.success) {
-            dispatch(set(user.result))
-            return navigate('/')
+        if (result.success) {
+            return dispatch(getUser())
         }
-        if (!user.success) {
+
+        if (!result.success) {
             setDisabledBtn(false)
-            if (LoginErrors[user.msg]) {
-                return setError("password", LoginErrors[user.msg])
+            if (LoginErrors[result.msg]) {
+                return setError("password", LoginErrors[result.msg])
             }
             
             /* In case there is no registered error, we will notify user to report it*/
-            console.log(user)
+            console.log(result)
             return setError("password", LoginErrors["not-found"])
         } 
     }

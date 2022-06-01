@@ -1,21 +1,16 @@
 import { Navigate, Outlet } from 'react-router-dom'
 
-import useUser from 'Hooks/useUser'
-import Spinner from 'Components/Spinner'
-import { Verification, Suspended } from 'Pages/Status'
+// Statuses
+import Suspended from 'Pages/Suspended/suspended'
+import VerificationNeeded from 'Pages/Verification/verificationNeeded'
 
-const ProtectedRoute = ({ redirectPath = '/auth/login', children }) => {
-    const { user, loading } = useUser()
-
-    if (loading) return <Spinner/>
-
+const ProtectedRoute = ({user, redirectPath = '/auth/login', children }) => {
     if (!user) {
         return <Navigate to={redirectPath} replace/>
     }
 
-    console.log(user.status)
     if (user.status === 'verification') {
-        return <Verification/>
+        return <VerificationNeeded/>
     } 
 
     if (user.status === 'suspended') {

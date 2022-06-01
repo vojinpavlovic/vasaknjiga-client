@@ -31,8 +31,13 @@ export const Inputs = {
         options: {
             required: true,
             minLength: 8,
+            pattern: /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
         },
         errors: {
+            'pattern' : {
+                type: 'custom',
+                message: 'Lozinka mora sadrzati minimum 8 karaktera, slova, broj i specijalne karaktere'
+            },
             'required': {
                 type: 'custom',
                 message: 'Ovo polje mora sadrzati neku vrednost!'

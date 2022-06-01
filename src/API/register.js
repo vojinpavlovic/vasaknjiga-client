@@ -10,7 +10,8 @@ const TryRegister = async (firstname, lastname, email, password, confirmPassword
             email: email, 
             password: password,
             confirmPassword: confirmPassword
-        }
+        },
+        credentials: true
     })
 
     return await result
