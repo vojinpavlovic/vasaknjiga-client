@@ -1,25 +1,37 @@
 import { useNavigate } from "react-router"
 
+
+import useAPI from 'Hooks/useAPI'
 import useQuery from "Hooks/useQuery"
+
 import Layout from "Components/SimpleLayout"
 import Button from "Components/Button"
-import { useEffect, useState } from "react"
 import Spinner from "Components/Spinner"
 
-const VerifyVerification = () => {
+const VerifyAccount = () => {
     const {email, code} = useQuery()
     
+    const {data, loading} = useAPI({
+        endpoint: `account/verifyAccount?email=${email}&code=${code}`, 
+        credentials: true
+    })
+    
     const navigate = useNavigate()
-
+    
     const goBack = () => {
         navigate('/')
     }
+    
+    if (loading) return <Spinner/>
 
-    if (!email || !code) return <Show success={false} back={goBack}/>
-
-    return <Show success={false} back={goBack}/>
+    if (!data.success) return <Show success={false} back={goBack}/>
+    
+    return <Show success={true} back={goBack}/>
 }
 
+/*
+    Show component based on if success or failed from Locales
+*/
 const Show = ({success, back}) => {
     const setTitle = success ? Locales['success'].title : Locales['failed'].title
     const setSubtitle = success ? Locales['success'].subtitle : Locales['failed'].subtitle
@@ -42,4 +54,4 @@ const Locales = {
     }
 }
 
-export default VerifyVerification
+export default VerifyAccount

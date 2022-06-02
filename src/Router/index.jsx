@@ -11,9 +11,9 @@ import Login from 'Pages/Login'
 import Register from 'Pages/Register'
 
 /* Protected Pages */
-import VerifyVerification from 'Pages/Verification/verifyVerification'
 /* Other Pages */
 import NotFound from 'Pages/NotFound'
+import VerifyAccount from 'Pages/Verification/verifyAccount'
 
 const Router = () => {
     const { user, loading } = useUser()
@@ -33,7 +33,7 @@ const Router = () => {
                     <Route path="/test" element={<NotFound/>}/>
                 </Route>
                 {/*Routes that can access both authorized and unauthorized users*/}
-                <Route path="/account/verify" element={<VerifyVerification/>}/>
+                <Route path="/account/verify" element={<VerifyAccount/>}/>
                 <Route path="*" element={<NotFound/>}/>
             </Routes>
         </BrowserRouter>

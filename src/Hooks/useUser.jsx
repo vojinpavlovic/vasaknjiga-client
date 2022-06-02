@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { getUser } from 'Features/user/userSlice'
 
+/* 
+    Hook for updating user data in redux user store
+*/
 const useUser = () => {
     const { user, loading } = useSelector((state) => state.user)
     
